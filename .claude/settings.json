@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"d:\\\\work\\\\37\\\\server\\\\platserver\" -Recurse -Force)",
+      "Bash(Select-Object FullName, PSIsContainer)",
+      "Bash(xargs grep -l \"PayServer\\\\|SocialServer\")",
+      "Bash(find \"D:\\\\work\\\\37\\\\shell\\\\tools\\\\tools-notice\" -type f | head -50)",
+      "Read(//d/work/37/shell/tools/tools-notice/**)",
+      "Bash(where protoc-gen-go-grpc *)",
+      "Bash(./tools/bin/protoc.exe --proto_path=../Proto_MergeHope/Protobuf/s_s/plat --proto_path=../Proto_MergeHope/Protobuf/common --proto_path=tools/include --go_out=. --go_opt=paths=source_relative --go_opt=Mmsg_plat_s2s.proto=pbcommon/gen/ss/msg --go_opt=Mmsg_common.proto=pbcommon/gen/common/msg --plugin=protoc-gen-go=tools/bin/protoc-gen-go.exe ../Proto_MergeHope/Protobuf/s_s/plat/msg_plat_s2s.proto)",
+      "Bash(rm /d/work/37/server/pbcommon/msg_plat_s2s.pb.go)",
+      "Bash(./tools/bin/protoc.exe --proto_path=../Proto_MergeHope/Protobuf/s_s/plat --proto_path=../Proto_MergeHope/Protobuf/common --proto_path=tools/include --go_out=gen/ss/msg --go_opt=paths=source_relative --go_opt=Mmsg_common.proto=pbcommon/gen/common/msg --plugin=protoc-gen-go=tools/bin/protoc-gen-go.exe ../Proto_MergeHope/Protobuf/s_s/plat/msg_plat_s2s.proto)",
+      "Bash(./tools/bin/protoc.exe --proto_path=../Proto_MergeHope/Protobuf/s_s/plat --proto_path=../Proto_MergeHope/Protobuf/common --proto_path=tools/include --go-grpc_out=gen/ss/msg --go-grpc_opt=paths=source_relative --go-grpc_opt=Mmsg_common.proto=pbcommon/gen/common/msg ../Proto_MergeHope/Protobuf/s_s/plat/msg_plat_s2s.proto)",
+      "Bash(cp /d/work/37/server/socialserver/go.sum /d/work/37/server/platserver/go.sum && echo \"OK\")",
+      "Bash(xargs grep -l \"YamlCfg\\\\|yamlcfg\")",
+      "Bash(go mod *)",
+      "Bash(del \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\internal\\\\platcfg\\\\config.go\")",
+      "PowerShell(Copy-Item -Force \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\conf\\\\.devops.yaml\" \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\bin\\\\\")",
+      "PowerShell(Copy-Item -Recurse -Force \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\config\" \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\bin\\\\\")"
+    ],
+    "additionalDirectories": [
+      "d:\\work\\37\\server\\common\\defines",
+      "D:\\work\\37\\server\\socialserver"
+    ]
+  }
+}
