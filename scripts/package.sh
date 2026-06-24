@@ -44,11 +44,11 @@ echo "4) 提审环境 (.devops_inter.yaml)"
 if read -t 60 -p "请输入选项 [1-4, 默认1]: " env_choice; then echo ""; else echo ""; env_choice=1; fi
 
 case ${env_choice:-1} in
-    1) CONFIG_FILE=".devops.yaml";             ENV_NAME="本地开发" ;;
-    2) CONFIG_FILE=".devops_test.yaml";        ENV_NAME="测试" ;;
-    3) CONFIG_FILE=".devops_production.yaml";  ENV_NAME="生产" ;;
-    4) CONFIG_FILE=".devops_inter.yaml";       ENV_NAME="提审" ;;
-    *) CONFIG_FILE=".devops.yaml";             ENV_NAME="本地开发" ;;
+    1) CONFIG_FILE=".devops.yaml";             ROBOT_NOTICE_FILE="RobotNotice.yaml";            ENV_NAME="本地开发" ;;
+    2) CONFIG_FILE=".devops_test.yaml";        ROBOT_NOTICE_FILE="RobotNotice_test.yaml";        ENV_NAME="测试" ;;
+    3) CONFIG_FILE=".devops_production.yaml";  ROBOT_NOTICE_FILE="RobotNotice_production.yaml";  ENV_NAME="生产" ;;
+    4) CONFIG_FILE=".devops_inter.yaml";       ROBOT_NOTICE_FILE="RobotNotice_inter.yaml";       ENV_NAME="提审" ;;
+    *) CONFIG_FILE=".devops.yaml";             ROBOT_NOTICE_FILE="RobotNotice.yaml";            ENV_NAME="本地开发" ;;
 esac
 
 VERSION=${1:-$(date +"%Y%m%d_%H%M%S")}
@@ -92,6 +92,14 @@ if [ -d "../config" ]; then
     echo "已复制: config/ -> config/"
 else
     echo -e "${RED}错误: config 目录不存在！${NC}"
+    exit 1
+fi
+
+if [ -f "../conf/${ROBOT_NOTICE_FILE}" ]; then
+    cp -f "../conf/${ROBOT_NOTICE_FILE}" "${TEMP_DIR}/config/RobotNotice.yaml"
+    echo "已复制: conf/${ROBOT_NOTICE_FILE} -> config/RobotNotice.yaml"
+else
+    echo -e "${RED}错误: 配置文件 conf/${ROBOT_NOTICE_FILE} 不存在！${NC}"
     exit 1
 fi
 

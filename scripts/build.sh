@@ -29,17 +29,17 @@ else
 fi
 
 case ${env_choice:-1} in
-    1) CONFIG_FILE=".devops.yaml";        ENV_NAME="本地开发" ;;
-    2) CONFIG_FILE=".devops_test.yaml";   ENV_NAME="测试" ;;
-    3) CONFIG_FILE=".devops_production.yaml"; ENV_NAME="生产" ;;
-    4) CONFIG_FILE=".devops_inter.yaml";  ENV_NAME="提审" ;;
-    *) CONFIG_FILE=".devops.yaml";        ENV_NAME="本地开发" ;;
+    1) CONFIG_FILE=".devops.yaml";             ROBOT_NOTICE_FILE="RobotNotice.yaml";            ENV_NAME="本地开发" ;;
+    2) CONFIG_FILE=".devops_test.yaml";        ROBOT_NOTICE_FILE="RobotNotice_test.yaml";        ENV_NAME="测试" ;;
+    3) CONFIG_FILE=".devops_production.yaml";  ROBOT_NOTICE_FILE="RobotNotice_production.yaml";  ENV_NAME="生产" ;;
+    4) CONFIG_FILE=".devops_inter.yaml";       ROBOT_NOTICE_FILE="RobotNotice_inter.yaml";       ENV_NAME="提审" ;;
+    *) CONFIG_FILE=".devops.yaml";             ROBOT_NOTICE_FILE="RobotNotice.yaml";            ENV_NAME="本地开发" ;;
 esac
 
 echo -e "${GREEN}已选择: ${ENV_NAME}环境 (${CONFIG_FILE})${NC}"
 echo ""
 
-mkdir -p ../bin ../bin/config
+mkdir -p ../bin ../config
 
 OS=$(uname -s)
 ARCH=$(uname -m)
@@ -101,6 +101,14 @@ if [ -d "../config" ]; then
     echo "已复制: config/ -> bin/config/"
 else
     echo -e "${RED}错误: config 目录不存在！${NC}"
+    exit 1
+fi
+
+if [ -f "../conf/${ROBOT_NOTICE_FILE}" ]; then
+    cp -f "../conf/${ROBOT_NOTICE_FILE}" "../config/RobotNotice.yaml"
+    echo "已复制: conf/${ROBOT_NOTICE_FILE} -> /config/RobotNotice.yaml"
+else
+    echo -e "${RED}错误: 配置文件 conf/${ROBOT_NOTICE_FILE} 不存在！${NC}"
     exit 1
 fi
 
