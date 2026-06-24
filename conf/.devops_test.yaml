@@ -5,7 +5,8 @@ configDir: "../config"
 
 etcd:
   - group: 1
-    host: 10.7.1.165:3379
+    host: 10.7.1.165
+    port: 3379 # 2379
     username: NONE
     password: NONE
 
