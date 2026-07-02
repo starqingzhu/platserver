@@ -48,7 +48,7 @@ func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2S
 }
 
 func (h *ServerHandler) S2SGmRobotNotice(ctx context.Context, req *pb.PBS2SGMRobotNoticeRequest) (*pb.PBS2GMRobotNoticeResponse, error) {
-	zaplog.LoggerSugar.Infof("[PlatServer] S2SGmRobotNotice userId=%d bizType=%s", req.Name, req.BizType)
+	zaplog.LoggerSugar.Infof("[PlatServer] S2SGmRobotNotice userId=%s bizType=%s", req.Name, req.BizType)
 
 	userIdStr := req.Name
 	if err := notify.Send(userIdStr, req.BizType, req.Body); err != nil {
