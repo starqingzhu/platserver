@@ -4,13 +4,13 @@ import "fmt"
 
 // MessageBuilder 根据业务参数构建发送给企业微信的消息体。
 type MessageBuilder interface {
-	Build(userId int64, bizType, body string) (msgType string, payload interface{})
+	Build(userId string, bizType, body string) (msgType string, payload interface{})
 }
 
 // MessageBuilderFunc 函数类型实现 MessageBuilder，方便轻量注册。
-type MessageBuilderFunc func(userId int64, bizType, body string) (msgType string, payload interface{})
+type MessageBuilderFunc func(userId string, bizType, body string) (msgType string, payload interface{})
 
-func (f MessageBuilderFunc) Build(userId int64, bizType, body string) (string, interface{}) {
+func (f MessageBuilderFunc) Build(userId string, bizType, body string) (string, interface{}) {
 	return f(userId, bizType, body)
 }
 

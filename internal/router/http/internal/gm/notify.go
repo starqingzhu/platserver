@@ -1,6 +1,7 @@
 package gm
 
 import (
+	"fmt"
 	"net/http"
 	"platserver/internal/module/notify"
 
@@ -20,7 +21,8 @@ func RobotNotice(ctx *gin.Context) {
 		return
 	}
 
-	if err := notify.Send(req.UserId, req.BizType, req.Body); err != nil {
+	userIdStr := fmt.Sprint(req.UserId)
+	if err := notify.Send(userIdStr, req.BizType, req.Body); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})
 		return
 	}

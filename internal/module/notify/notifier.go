@@ -12,7 +12,7 @@ import (
 const queueSize = 256
 
 type sendTask struct {
-	userId  int64
+	userId  string
 	bizType string
 	body    string
 }
@@ -28,7 +28,7 @@ var defaultNotifier *RobotNotifier
 
 // Send enqueues a message to be delivered asynchronously.
 // Returns an error only if the notifier is uninitialised or the queue is full.
-func Send(userId int64, bizType, body string) error {
+func Send(userId string, bizType, body string) error {
 	if defaultNotifier == nil {
 		return fmt.Errorf("notifier not initialised, call LoadConfig first")
 	}
@@ -65,7 +65,7 @@ func (n *RobotNotifier) shutdown() {
 	<-n.done
 }
 
-func (n *RobotNotifier) send(userId int64, bizType, body string) error {
+func (n *RobotNotifier) send(userId string, bizType, body string) error {
 	msgType, payload := getBuilder(bizType).Build(userId, bizType, body)
 
 	msg := map[string]interface{}{

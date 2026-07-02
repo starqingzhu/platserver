@@ -2,6 +2,7 @@ package plat
 
 import (
 	"context"
+	"fmt"
 	"golib/zaplog"
 	"platserver/internal/module/notify"
 
@@ -33,7 +34,8 @@ func (h *ServerHandler) Close() error {
 func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2SRobotNoticeRequest) (*pb.PBS2RobotNoticeResponse, error) {
 	zaplog.LoggerSugar.Infof("[PlatServer] S2SPlayer2RobotNotice userId=%d bizType=%s", req.UserId, req.BizType)
 
-	if err := notify.Send(req.UserId, req.BizType, req.Body); err != nil {
+	userIdStr := fmt.Sprint(req.UserId)
+	if err := notify.Send(userIdStr, req.BizType, req.Body); err != nil {
 		zaplog.LoggerSugar.Errorf("[PlatServer] S2SPlayer2RobotNotice send failed: %v", err)
 		return &pb.PBS2RobotNoticeResponse{
 			MsgCode: commonmsg.MsgCode_CODE_ERROR,
@@ -41,6 +43,21 @@ func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2S
 	}
 
 	return &pb.PBS2RobotNoticeResponse{
+		MsgCode: commonmsg.MsgCode_CODE_OK,
+	}, nil
+}
+
+func (h *ServerHandler) S2SGmRobotNotice(ctx context.Context, req *pb.PBS2SGMRobotNoticeRequest) (*pb.PBS2GMRobotNoticeResponse, error) {
+	zaplog.LoggerSugar.Infof("[PlatServer] S2SGmRobotNotice userId=%d bizType=%s", req.Name, req.BizType)
+
+	userIdStr := req.Name
+	if err := notify.Send(userIdStr, req.BizType, req.Body); err != nil {
+		zaplog.LoggerSugar.Errorf("[PlatServer] S2SGmRobotNotice send failed: %v", err)
+		return &pb.PBS2GMRobotNoticeResponse{
+			MsgCode: commonmsg.MsgCode_CODE_ERROR,
+		}, nil
+	}
+	return &pb.PBS2GMRobotNoticeResponse{
 		MsgCode: commonmsg.MsgCode_CODE_OK,
 	}, nil
 }
