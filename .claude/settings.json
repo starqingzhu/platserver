@@ -16,11 +16,13 @@
       "Bash(go mod *)",
       "Bash(del \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\internal\\\\platcfg\\\\config.go\")",
       "PowerShell(Copy-Item -Force \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\conf\\\\.devops.yaml\" \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\bin\\\\\")",
-      "PowerShell(Copy-Item -Recurse -Force \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\config\" \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\bin\\\\\")"
+      "PowerShell(Copy-Item -Recurse -Force \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\config\" \"d:\\\\work\\\\37\\\\server\\\\platserver\\\\bin\\\\\")",
+      "Bash(xargs grep -l \"RobotNoticeBizTypeActivity\")"
     ],
     "additionalDirectories": [
       "d:\\work\\37\\server\\common\\defines",
-      "D:\\work\\37\\server\\socialserver"
+      "D:\\work\\37\\server\\socialserver",
+      "d:\\work\\37\\server\\gameserver\\internal\\module\\activity"
     ]
   }
 }
