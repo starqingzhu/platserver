@@ -23,11 +23,11 @@ func buildActivityMarkdown(userId string, bizType, body string) (string, interfa
 		color = "red"
 	}
 
-	// Format each body line with double blockquote for indented appearance
+	// Format each body line indented under "告警内容" using full-width spaces
 	lines := strings.Split(body, "\n")
 	var sb strings.Builder
 	for _, line := range lines {
-		sb.WriteString(">>")
+		sb.WriteString(">　　")
 		sb.WriteString(line)
 		sb.WriteString("\n")
 	}
