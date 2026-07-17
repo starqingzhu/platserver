@@ -13,14 +13,17 @@ func init() {
 func buildActivityMarkdown(userId string, bizType, body string) (string, interface{}) {
 	now := time.Now().In(time.FixedZone("CST", 8*3600)).Format("2006-01-02 15:04:05")
 
-	// WeChat markdown supports: info(gray) comment(gray) warning(yellow) red(red)
+	// WeChat markdown supports: info(gray) comment(gray) warning(yellow) red(red) green(green)
 	color := "warning" // default yellow for modify and other operations
 	firstLine := body
 	if idx := strings.Index(body, "\n"); idx >= 0 {
 		firstLine = body[:idx]
 	}
-	if strings.Contains(strings.ToLower(firstLine), "[delete]") {
+	lower := strings.ToLower(firstLine)
+	if strings.Contains(lower, "[delete]") {
 		color = "red"
+	} else if strings.Contains(lower, "[create]") {
+		color = "green"
 	}
 
 	// Format each body line indented under "告警内容" using full-width spaces
