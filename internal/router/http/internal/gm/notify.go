@@ -1,11 +1,16 @@
 package gm
 
 import (
-	"fmt"
 	"net/http"
-	"platserver/internal/module/notify"
+
+	"platserver/internal/dispatch"
+
+	libdispatch "golib/dispatch"
+	commonmsg "pbcommon/gen/common/msg"
+	pb "pbcommon/gen/ss/msg"
 
 	"github.com/gin-gonic/gin"
+	"google.golang.org/protobuf/proto"
 )
 
 type robotNoticeRequest struct {
@@ -21,9 +26,30 @@ func RobotNotice(ctx *gin.Context) {
 		return
 	}
 
-	userIdStr := fmt.Sprint(req.UserId)
-	if err := notify.Send(userIdStr, req.BizType, req.Body); err != nil {
+	payload, err := proto.Marshal(&pb.PBS2SRobotNoticeRequest{
+		UserId:  req.UserId,
+		BizType: req.BizType,
+		Body:    req.Body,
+	})
+	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})
+		return
+	}
+
+	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolHTTP, RemoteIP: ctx.ClientIP()}
+	respBytes, err := dispatch.Main.Dispatch(ctx.Request.Context(), meta, dispatch.CmdRobotNoticePlayer, payload)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})
+		return
+	}
+
+	resp := &pb.PBS2RobotNoticeResponse{}
+	if err := proto.Unmarshal(respBytes, resp); err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})
+		return
+	}
+	if resp.MsgCode != commonmsg.MsgCode_CODE_OK {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": "send failed"})
 		return
 	}
 

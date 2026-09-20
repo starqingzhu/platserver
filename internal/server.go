@@ -11,6 +11,8 @@ import (
 	"golib/yamlcfg"
 	"golib/zaplog"
 	"path/filepath"
+	"platserver/internal/dispatch"
+	"platserver/internal/handler"
 	"platserver/internal/module/notify"
 	hrouter "platserver/internal/router/http"
 	rpcservice "platserver/internal/router/rpc"
@@ -65,6 +67,10 @@ func (s *Server) OnInit() {
 	cetcd.InitAndWatchServerType(false, defines.PlatServer.String())
 
 	s.initConfigFiles()
+
+	if err := handler.RegisterAll(dispatch.Main); err != nil {
+		zaplog.LoggerSugar.Fatalf("RegisterAll dispatch commands failed: %v", err)
+	}
 
 	rpcservice.InitAllRPC()
 
