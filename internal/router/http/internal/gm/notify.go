@@ -2,6 +2,7 @@ package gm
 
 import (
 	"net/http"
+	"strconv"
 
 	"platserver/internal/dispatch"
 
@@ -26,17 +27,25 @@ func RobotNotice(ctx *gin.Context) {
 		return
 	}
 
+	// 从 URL Query 或 Header 中提取 gameId（与 C/S 接口保持一致）
+	gameIdStr := ctx.Query("gameId")
+	if gameIdStr == "" {
+		gameIdStr = ctx.GetHeader("X-Game-Id")
+	}
+	gameId, _ := strconv.Atoi(gameIdStr)
+
 	payload, err := proto.Marshal(&pb.PBS2SRobotNoticeRequest{
 		UserId:  req.UserId,
 		BizType: req.BizType,
 		Body:    req.Body,
+		Context: &commonmsg.PBRequestContext{GameId: int32(gameId)},
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})
 		return
 	}
 
-	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolHTTP, RemoteIP: ctx.ClientIP()}
+	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolHTTP, RemoteIP: ctx.ClientIP(), GameId: int32(gameId)}
 	respBytes, err := dispatch.Main.Dispatch(ctx.Request.Context(), meta, dispatch.CmdRobotNoticePlayer, payload)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})

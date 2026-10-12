@@ -5,6 +5,7 @@ import (
 	"golib/zaplog"
 	"platserver/internal/dispatch"
 
+	"common/rpc"
 	libdispatch "golib/dispatch"
 	commonmsg "pbcommon/gen/common/msg"
 	pb "pbcommon/gen/ss/msg"
@@ -34,7 +35,8 @@ func (h *ServerHandler) Close() error {
 }
 
 func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2SRobotNoticeRequest) (*pb.PBS2RobotNoticeResponse, error) {
-	zaplog.LoggerSugar.Infof("[PlatServer] S2SPlayer2RobotNotice userId=%d bizType=%s", req.UserId, req.BizType)
+	gameId := rpc.GameIdFromContext(ctx).Int32()
+	zaplog.LoggerSugar.Infof("[PlatServer] S2SPlayer2RobotNotice userId=%d bizType=%s gameId=%d", req.UserId, req.BizType, gameId)
 
 	payload, err := proto.Marshal(req)
 	if err != nil {
@@ -42,7 +44,7 @@ func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2S
 		return &pb.PBS2RobotNoticeResponse{MsgCode: commonmsg.MsgCode_CODE_ERROR}, nil
 	}
 
-	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolGRPC}
+	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolGRPC, GameId: gameId}
 	respBytes, err := dispatch.Main.Dispatch(ctx, meta, dispatch.CmdRobotNoticePlayer, payload)
 	if err != nil {
 		zaplog.LoggerSugar.Errorf("[PlatServer] S2SPlayer2RobotNotice dispatch failed: userId=%d, err=%v", req.UserId, err)
@@ -58,7 +60,8 @@ func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2S
 }
 
 func (h *ServerHandler) S2SGmRobotNotice(ctx context.Context, req *pb.PBS2SGMRobotNoticeRequest) (*pb.PBS2GMRobotNoticeResponse, error) {
-	zaplog.LoggerSugar.Infof("[PlatServer] S2SGmRobotNotice userId=%s bizType=%s", req.Name, req.BizType)
+	gameId := rpc.GameIdFromContext(ctx).Int32()
+	zaplog.LoggerSugar.Infof("[PlatServer] S2SGmRobotNotice userId=%s bizType=%s gameId=%d", req.Name, req.BizType, gameId)
 
 	payload, err := proto.Marshal(req)
 	if err != nil {
@@ -66,7 +69,7 @@ func (h *ServerHandler) S2SGmRobotNotice(ctx context.Context, req *pb.PBS2SGMRob
 		return &pb.PBS2GMRobotNoticeResponse{MsgCode: commonmsg.MsgCode_CODE_ERROR}, nil
 	}
 
-	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolGRPC}
+	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolGRPC, GameId: gameId}
 	respBytes, err := dispatch.Main.Dispatch(ctx, meta, dispatch.CmdRobotNoticeGM, payload)
 	if err != nil {
 		zaplog.LoggerSugar.Errorf("[PlatServer] S2SGmRobotNotice dispatch failed: name=%s, err=%v", req.Name, err)
