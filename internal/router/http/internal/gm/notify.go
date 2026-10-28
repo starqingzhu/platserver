@@ -38,7 +38,6 @@ func RobotNotice(ctx *gin.Context) {
 		UserId:  req.UserId,
 		BizType: req.BizType,
 		Body:    req.Body,
-		Context: &commonmsg.PBRequestContext{GameId: int32(gameId)},
 	})
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"code": -1, "msg": err.Error()})

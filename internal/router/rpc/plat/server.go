@@ -6,7 +6,6 @@ import (
 	"platserver/internal/dispatch"
 
 	"common/rpc"
-	libdispatch "golib/dispatch"
 	commonmsg "pbcommon/gen/common/msg"
 	pb "pbcommon/gen/ss/msg"
 
@@ -44,7 +43,7 @@ func (h *ServerHandler) S2SPlayer2RobotNotice(ctx context.Context, req *pb.PBS2S
 		return &pb.PBS2RobotNoticeResponse{MsgCode: commonmsg.MsgCode_CODE_ERROR}, nil
 	}
 
-	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolGRPC, GameId: gameId}
+	meta := rpc.MetaFromIncomingContext(ctx)
 	respBytes, err := dispatch.Main.Dispatch(ctx, meta, dispatch.CmdRobotNoticePlayer, payload)
 	if err != nil {
 		zaplog.LoggerSugar.Errorf("[PlatServer] S2SPlayer2RobotNotice dispatch failed: userId=%d, err=%v", req.UserId, err)
@@ -69,7 +68,7 @@ func (h *ServerHandler) S2SGmRobotNotice(ctx context.Context, req *pb.PBS2SGMRob
 		return &pb.PBS2GMRobotNoticeResponse{MsgCode: commonmsg.MsgCode_CODE_ERROR}, nil
 	}
 
-	meta := libdispatch.Meta{Protocol: libdispatch.ProtocolGRPC, GameId: gameId}
+	meta := rpc.MetaFromIncomingContext(ctx)
 	respBytes, err := dispatch.Main.Dispatch(ctx, meta, dispatch.CmdRobotNoticeGM, payload)
 	if err != nil {
 		zaplog.LoggerSugar.Errorf("[PlatServer] S2SGmRobotNotice dispatch failed: name=%s, err=%v", req.Name, err)
