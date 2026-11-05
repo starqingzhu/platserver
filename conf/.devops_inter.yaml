@@ -1,4 +1,4 @@
-game: merge
+game: mergeCombine
 cluster: inter
 module: platserver
 configDir: "../config"
